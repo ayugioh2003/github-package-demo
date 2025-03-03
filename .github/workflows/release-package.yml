@@ -5,15 +5,22 @@ on:
     types: [created]
 
 jobs:
+  
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Check token permissions
+        run: |
+          curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Accept: application/vnd.github.v3+json" \
+              https://api.github.com/user
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
       - run: npm ci
       - run: npm test
+    
 
   publish-gpr:
     needs: build
